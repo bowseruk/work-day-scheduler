@@ -91,7 +91,7 @@ function createCalendar() {
         if (localStorage.getItem(`${i}`) !== null) {
             note = JSON.parse(localStorage.getItem(`${i}`))
             // If it was from a previous day, discard the note
-            if (dayjs() > note[1]) {
+            if (dayjs() > dayjs(note[1])) {
                 localStorage.removeItem(`${i}`)
             } else {
                 // Output the note
