@@ -81,6 +81,7 @@ function createCalendar() {
         }
         div.addClass("hour");
         div.on("click", toggleTimeSystem)
+        // Changed input to text area for better user experience
         let input = $('<textarea>');
         // Check qhich slots to color
         if (dayjs().get('h') > i) {
