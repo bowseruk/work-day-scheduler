@@ -1,12 +1,9 @@
-let nowDate = dayjs();
-let lastTime = dayjs().get('h');
-let lastDay = dayjs().get('d');
-// This is set with the 24 hour clock. 1pm is 13.
-let workStart = 9;
-let workEnd = 17;
+let lastHour = dayjs().subtract(1, 'd').get('h');
+let lastDay = dayjs().subtract(1, 'd').get('d');
+let timerInterval;
 // Run this to set the date on the page
 function setDate() {
-    $('#currentDay').text(nowDate.format('dddd DD MMMM YYYY'))
+    $('#currentDay').text(dayjs())
 }
 // Run this to clear the Calendar
 function clearCalendar() {
@@ -22,42 +19,26 @@ function toggleTimeSystem() {
     // Redraw the calendar when the change happens
     createCalendar()
 }
-function addEarlierTimeslot() {
-    if (workStart > 0) {
-        workStart--;
-        createCalendar();
-        return true;
-    }
+// This function 
+function changeSlots(amount, target) {
+    let targetsName = ["workStart", "workEnd"]
+    let targets = [parseInt(localStorage.getItem("workStart")), parseInt(localStorage.getItem("workEnd"))]
+    if ((targets[0] < 1 && target === 0 && amount < 0) || (targets[1] >= 24 && target === 1 && amount > 0)) {
+        return false;
+    } else if ((targets[0] + 1 >= targets[1]) && (((target === 1) && (amount < 0)) || ((target === 0) && (amount > 0))) ){
+        return false
+    } else {
+        localStorage.setItem(targetsName[target],(targets[target] + amount));
+    }    
     createCalendar();
-    return false;
+    return true;
 }
-function removeEarlierTimeslot() {
-    if (workStart < workEnd) {
-        workStart++;
-        createCalendar();
-        return true;
-    }
-    createCalendar()
-    return false;
-}
-function addLaterTimeslot() {
-    if (workEnd < 24) {
-        workEnd++;
-        createCalendar();
-        return true;
-    }
-    createCalendar()
-    return false;
-}
-function removeLaterTimeslot() {
-    if (workEnd > workStart) {
-        workEnd--;
-        createCalendar();
-        return true;
-    }
-    createCalendar()
-    return false;
-}
+// Functions called by the buttons to modify the timeslots
+function addEarlierTimeslot() {return changeSlots(-1,0)}
+function removeEarlierTimeslot() { return changeSlots(1,0)}
+function addLaterTimeslot() { return changeSlots(1,1)}
+function removeLaterTimeslot() { return changeSlots(-1,1)}
+
 // Run this to render the calendar
 function createCalendar() {
     clearCalendar();
@@ -83,7 +64,7 @@ function createCalendar() {
     preBlock.append(removePreButton);
     preBlock.append(addPreButton);
     $('.container').append(preBlock);
-    for (let i = workStart; i < workEnd; i++) {
+    for (let i = parseInt(localStorage.getItem("workStart")); i < parseInt(localStorage.getItem("workEnd")); i++) {
         // This area displays the time
         let div = $('<div>');
         // Display for blockin 24 or 12 hour format
@@ -106,11 +87,14 @@ function createCalendar() {
         }
         input.attr("data-hour", i);
         input.attr("id", `${i}-note`);
+        // If there is stored data, retrieve the data
         if (localStorage.getItem(`${i}`) !== null) {
             note = JSON.parse(localStorage.getItem(`${i}`))
+            // If it was from a previous day, discard the note
             if (dayjs() > note[1]) {
                 localStorage.removeItem(`${i}`)
             } else {
+                // Output the note
                 input.val(note[0]);
             }
         }
@@ -131,7 +115,7 @@ function createCalendar() {
         timeblock.addClass('time-block row');
         $('.container').append(timeblock);
     }
-        // Add buttons to adjust number of rows
+    // Add buttons to adjust number of rows
     // Create a button and add classes and attributes
     let removePostButton = $('<button>');
     removePostButton.addClass("minus-btn");
@@ -154,13 +138,37 @@ function createCalendar() {
     postBlock.append(addPostButton);
     $('.container').append(postBlock);
 }
-
+// This saves the content of the note
 function saveNote(event) {
     id = $(this).attr("data-hour");
     value = $(`#${id}-note`).val();
-    localStorage.setItem(`${id}`, JSON.stringify([value, dayjs().endOf('day')]))
-    console.log(value);
+    // Save to local storage, with an expiration for the end of the day
+    localStorage.setItem(`${id}`, JSON.stringify([value, dayjs().endOf('day')]));
 }
 
-setDate()
-createCalendar();
+function checkUpdate() {
+    if (lastDay < dayjs().get('d')) {
+        lastDay = dayjs().get('d');
+        createCalendar();
+    } else if (lastHour < dayjs().get('h')) {
+        lastHour = dayjs().get('h');
+        createCalendar();
+    }
+    setDate();
+}
+// Keeps the date and the highlight on the calendar in sync with the time
+function init() {
+    // If no number of time blocks has been set, default it to 9 am - 5 pm (5 pm doesn't show as that would be 5 pm - 6 pm)
+    if (! localStorage.getItem("workStart")) {
+        localStorage.setItem("workStart", 9);
+    }
+    if (! localStorage.getItem("workEnd")) {
+        localStorage.setItem("workEnd", 17);
+    }
+    setDate()
+    createCalendar();
+    // Sets interval in variable
+    timerInterval = setInterval(checkUpdate, 1000);
+}
+
+init()
