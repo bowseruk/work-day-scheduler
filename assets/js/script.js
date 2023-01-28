@@ -1,8 +1,6 @@
 let nowDate = dayjs();
-let lastime = dayjs().get('h');
+let lastTime = dayjs().get('h');
 let lastDay = dayjs().get('d');
-// true is 24 hour clock, false is 12 hour clock
-let twentyFourHr = false;
 // This is set with the 24 hour clock. 1pm is 13.
 let workStart = 9;
 let workEnd = 17;
@@ -21,11 +19,70 @@ function toggleTimeSystem() {
     } else {
         localStorage.setItem(`twentyFourHr`, true);
     }
+    // Redraw the calendar when the change happens
     createCalendar()
+}
+function addEarlierTimeslot() {
+    if (workStart > 0) {
+        workStart--;
+        createCalendar();
+        return true;
+    }
+    createCalendar();
+    return false;
+}
+function removeEarlierTimeslot() {
+    if (workStart < workEnd) {
+        workStart++;
+        createCalendar();
+        return true;
+    }
+    createCalendar()
+    return false;
+}
+function addLaterTimeslot() {
+    if (workEnd < 24) {
+        workEnd++;
+        createCalendar();
+        return true;
+    }
+    createCalendar()
+    return false;
+}
+function removeLaterTimeslot() {
+    if (workEnd > workStart) {
+        workEnd--;
+        createCalendar();
+        return true;
+    }
+    createCalendar()
+    return false;
 }
 // Run this to render the calendar
 function createCalendar() {
-    clearCalendar()
+    clearCalendar();
+    // Add buttons to adjust number of rows
+    // Create a button and add classes and attributes
+    let removePreButton = $('<button>');
+    removePreButton.addClass("minus-btn");
+    removePreButton.on("click", removeEarlierTimeslot)
+    // Use font awesome for a save (floppy disk) icon
+    let removePreLogo = $('<i>');
+    removePreLogo.addClass("fa-solid fa-minus")
+    removePreButton.append(removePreLogo);
+    // Create a button and add classes and attributes
+    let addPreButton = $('<button>');
+    addPreButton.addClass("plus-btn");
+    addPreButton.on("click", addEarlierTimeslot)
+    // Use font awesome for a save (floppy disk) icon
+    let addPreLogo = $('<i>');
+    addPreLogo.addClass("fa-solid fa-plus")
+    addPreButton.append(addPreLogo);
+    let preBlock = $('<div>');
+    preBlock.addClass('button-row');
+    preBlock.append(removePreButton);
+    preBlock.append(addPreButton);
+    $('.container').append(preBlock);
     for (let i = workStart; i < workEnd; i++) {
         // This area displays the time
         let div = $('<div>');
@@ -35,7 +92,7 @@ function createCalendar() {
             div.text(`${String(i).padStart(2, '0')}:00`);
         } else {
             // If it dvides by 12, display 12. If the hour si greater than or equal to 12, it is pm.
-            div.text(`${String((i%12 === 0) ? 12 : (i%12)).padStart(2, ' ')} ${(i >= 12 ? 'PM' : 'AM')}`);
+            div.text(`${String((i % 12 === 0) ? 12 : (i % 12)).padStart(2, ' ')} ${(i >= 12 ? 'PM' : 'AM')}`);
         }
         div.addClass("hour");
         div.on("click", toggleTimeSystem)
@@ -74,6 +131,28 @@ function createCalendar() {
         timeblock.addClass('time-block row');
         $('.container').append(timeblock);
     }
+        // Add buttons to adjust number of rows
+    // Create a button and add classes and attributes
+    let removePostButton = $('<button>');
+    removePostButton.addClass("minus-btn");
+    removePostButton.on("click", removeLaterTimeslot)
+    // Use font awesome for a save (floppy disk) icon
+    let removePostLogo = $('<i>');
+    removePostLogo.addClass("fa-solid fa-minus")
+    removePostButton.append(removePostLogo);
+    // Create a button and add classes and attributes
+    let addPostButton = $('<button>');
+    addPostButton.addClass("plus-btn");
+    addPostButton.on("click", addLaterTimeslot)
+    // Use font awesome for a save (floppy disk) icon
+    let addPostLogo = $('<i>');
+    addPostLogo.addClass("fa-solid fa-plus")
+    addPostButton.append(addPostLogo);
+    let postBlock = $('<div>');
+    postBlock.addClass('button-row');
+    postBlock.append(removePostButton);
+    postBlock.append(addPostButton);
+    $('.container').append(postBlock);
 }
 
 function saveNote(event) {

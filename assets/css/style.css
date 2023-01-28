@@ -38,6 +38,30 @@ textarea {
   display: flex;
 }
 
+.button-row {
+  text-align: center;
+  white-space: pre-wrap;
+  height: 80px;
+  border-top: 1px solid white;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  align-self: center;
+}
+/* Added section for buttons */
+.minus-btn, .plus-button {
+  align-self: center;
+}
+
+.minus-btn {
+  background-color: #ff6961;
+}
+
+.plus-btn {
+  background-color: greenyellow;
+}
+
 .hour {
   background-color: #ffffff;
   color: #000000;
