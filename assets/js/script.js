@@ -170,12 +170,12 @@ function checkUpdate() {
 }
 // Keeps the date and the highlight on the calendar in sync with the time
 function init() {
-    // If no number of time blocks has been set, default it to 9 am - 5 pm (5 pm doesn't show as that would be 5 pm - 6 pm)
+    // If no number of time blocks has been set, default it to 9 am - 6 pm (it goes to 5:59 to match the image given, but it is an hour too much. Have the option to persistently change it anyway.)
     if (!localStorage.getItem("workStart")) {
         localStorage.setItem("workStart", 9);
     }
     if (!localStorage.getItem("workEnd")) {
-        localStorage.setItem("workEnd", 17);
+        localStorage.setItem("workEnd", 18);
     }
     setDate()
     createCalendar();
