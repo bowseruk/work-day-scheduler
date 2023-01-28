@@ -1,3 +1,4 @@
+// delibrately set back so they will be overriden on start up. Was like this to help debug at first.
 let lastHour = dayjs().subtract(1, 'd').get('h');
 let lastDay = dayjs().subtract(1, 'd').get('d');
 let timerInterval;
@@ -21,19 +22,22 @@ function toggleTimeSystem() {
 }
 // This function 
 function changeSlots(amount, target) {
+    // This is to target local storage
     let targetsName = ["workStart", "workEnd"]
     let targets = [parseInt(localStorage.getItem("workStart")), parseInt(localStorage.getItem("workEnd"))]
+    // Make sure not to overflow the day or for the start and end to overlap
     if ((targets[0] < 1 && target === 0 && amount < 0) || (targets[1] >= 24 && target === 1 && amount > 0)) {
         return false;
     } else if ((targets[0] + 1 >= targets[1]) && (((target === 1) && (amount < 0)) || ((target === 0) && (amount > 0)))) {
         return false
     } else {
+        // change loca
         localStorage.setItem(targetsName[target], (targets[target] + amount));
     }
     createCalendar();
     return true;
 }
-// Functions called by the buttons to modify the timeslots
+// Functions called by the buttons to modify the timeslots. Use the above function to make it concise
 function addEarlierTimeslot() { return changeSlots(-1, 0) }
 function removeEarlierTimeslot() { return changeSlots(1, 0) }
 function addLaterTimeslot() { return changeSlots(1, 1) }
@@ -47,7 +51,7 @@ function createCalendar() {
     let removePreButton = $('<button>');
     removePreButton.addClass("minus-btn");
     removePreButton.on("click", removeEarlierTimeslot)
-    // Use font awesome for a save (floppy disk) icon
+    // Use font awesome for a minus icon
     let removePreLogo = $('<i>');
     removePreLogo.addClass("fa-solid fa-minus")
     removePreButton.append(removePreLogo);
@@ -55,7 +59,7 @@ function createCalendar() {
     let addPreButton = $('<button>');
     addPreButton.addClass("plus-btn");
     addPreButton.on("click", addEarlierTimeslot)
-    // Use font awesome for a save (floppy disk) icon
+    // Use font awesome for a plus icon
     let addPreLogo = $('<i>');
     addPreLogo.addClass("fa-solid fa-plus")
     addPreButton.append(addPreLogo);
@@ -78,6 +82,7 @@ function createCalendar() {
         div.addClass("hour");
         div.on("click", toggleTimeSystem)
         let input = $('<textarea>');
+        // Check qhich slots to color
         if (dayjs().get('h') > i) {
             input.addClass("past");
         } else if (dayjs().get('h') < i) {
@@ -85,6 +90,7 @@ function createCalendar() {
         } else {
             input.addClass("present");
         }
+        // add data attribute rather than data, as jquery doesnt save it in the html
         input.attr("data-hour", i);
         input.attr("id", `${i}-note`);
         // If there is stored data, retrieve the data
@@ -175,5 +181,5 @@ function init() {
     // Sets interval in variable
     timerInterval = setInterval(checkUpdate, 1000);
 }
-
+// Start the logic
 init()
