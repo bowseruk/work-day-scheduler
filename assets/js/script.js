@@ -60,7 +60,7 @@ function createCalendar() {
     addPreLogo.addClass("fa-solid fa-plus")
     addPreButton.append(addPreLogo);
     let preBlock = $('<div>');
-    preBlock.addClass('button-row');
+    preBlock.addClass('button-row time-block');
     preBlock.append(removePreButton);
     preBlock.append(addPreButton);
     $('.container').append(preBlock);
@@ -133,7 +133,7 @@ function createCalendar() {
     addPostLogo.addClass("fa-solid fa-plus")
     addPostButton.append(addPostLogo);
     let postBlock = $('<div>');
-    postBlock.addClass('button-row');
+    postBlock.addClass('button-row time-block');
     postBlock.append(removePostButton);
     postBlock.append(addPostButton);
     $('.container').append(postBlock);

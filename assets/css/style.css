@@ -50,8 +50,12 @@ textarea {
   align-self: center;
 }
 /* Added section for buttons */
-.minus-btn, .plus-button {
+.minus-btn, .plus-btn {
   align-self: center;
+  border-radius: 10px;
+  border: none;
+  padding: 5px;
+  margin: 5px;
 }
 
 .minus-btn {
