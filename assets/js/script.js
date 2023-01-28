@@ -49,7 +49,7 @@ function createCalendar() {
     // Add buttons to adjust number of rows
     // Create a button and add classes and attributes
     let removePreButton = $('<button>');
-    removePreButton.addClass("minus-btn");
+    removePreButton.addClass("minus-btn col-md-2");
     removePreButton.on("click", removeEarlierTimeslot)
     // Use font awesome for a minus icon
     let removePreLogo = $('<i>');
@@ -57,14 +57,14 @@ function createCalendar() {
     removePreButton.append(removePreLogo);
     // Create a button and add classes and attributes
     let addPreButton = $('<button>');
-    addPreButton.addClass("plus-btn");
+    addPreButton.addClass("plus-btn col-md-2");
     addPreButton.on("click", addEarlierTimeslot)
     // Use font awesome for a plus icon
     let addPreLogo = $('<i>');
     addPreLogo.addClass("fa-solid fa-plus")
     addPreButton.append(addPreLogo);
     let preBlock = $('<div>');
-    preBlock.addClass('button-row time-block');
+    preBlock.addClass('button-row time-block row justify-content-center');
     preBlock.append(removePreButton);
     preBlock.append(addPreButton);
     $('.container').append(preBlock);
@@ -124,7 +124,7 @@ function createCalendar() {
     // Add buttons to adjust number of rows
     // Create a button and add classes and attributes
     let removePostButton = $('<button>');
-    removePostButton.addClass("minus-btn");
+    removePostButton.addClass("minus-btn col-md-2");
     removePostButton.on("click", removeLaterTimeslot)
     // Use font awesome for a save (floppy disk) icon
     let removePostLogo = $('<i>');
@@ -132,14 +132,14 @@ function createCalendar() {
     removePostButton.append(removePostLogo);
     // Create a button and add classes and attributes
     let addPostButton = $('<button>');
-    addPostButton.addClass("plus-btn");
+    addPostButton.addClass("plus-btn col-md-2");
     addPostButton.on("click", addLaterTimeslot)
     // Use font awesome for a save (floppy disk) icon
     let addPostLogo = $('<i>');
     addPostLogo.addClass("fa-solid fa-plus")
     addPostButton.append(addPostLogo);
     let postBlock = $('<div>');
-    postBlock.addClass('button-row time-block');
+    postBlock.addClass('button-row time-block row justify-content-center');
     postBlock.append(removePostButton);
     postBlock.append(addPostButton);
     $('.container').append(postBlock);
