@@ -25,19 +25,19 @@ function changeSlots(amount, target) {
     let targets = [parseInt(localStorage.getItem("workStart")), parseInt(localStorage.getItem("workEnd"))]
     if ((targets[0] < 1 && target === 0 && amount < 0) || (targets[1] >= 24 && target === 1 && amount > 0)) {
         return false;
-    } else if ((targets[0] + 1 >= targets[1]) && (((target === 1) && (amount < 0)) || ((target === 0) && (amount > 0))) ){
+    } else if ((targets[0] + 1 >= targets[1]) && (((target === 1) && (amount < 0)) || ((target === 0) && (amount > 0)))) {
         return false
     } else {
-        localStorage.setItem(targetsName[target],(targets[target] + amount));
-    }    
+        localStorage.setItem(targetsName[target], (targets[target] + amount));
+    }
     createCalendar();
     return true;
 }
 // Functions called by the buttons to modify the timeslots
-function addEarlierTimeslot() {return changeSlots(-1,0)}
-function removeEarlierTimeslot() { return changeSlots(1,0)}
-function addLaterTimeslot() { return changeSlots(1,1)}
-function removeLaterTimeslot() { return changeSlots(-1,1)}
+function addEarlierTimeslot() { return changeSlots(-1, 0) }
+function removeEarlierTimeslot() { return changeSlots(1, 0) }
+function addLaterTimeslot() { return changeSlots(1, 1) }
+function removeLaterTimeslot() { return changeSlots(-1, 1) }
 
 // Run this to render the calendar
 function createCalendar() {
@@ -142,8 +142,13 @@ function createCalendar() {
 function saveNote(event) {
     id = $(this).attr("data-hour");
     value = $(`#${id}-note`).val();
-    // Save to local storage, with an expiration for the end of the day
-    localStorage.setItem(`${id}`, JSON.stringify([value, dayjs().endOf('day')]));
+    // remove empty notes from local storage
+    if (value === "") {
+        localStorage.removeItem(`${id}`)
+    } else {
+        // Save to local storage, with an expiration for the end of the day
+        localStorage.setItem(`${id}`, JSON.stringify([value, dayjs().endOf('day')]));
+    }
 }
 
 function checkUpdate() {
@@ -159,10 +164,10 @@ function checkUpdate() {
 // Keeps the date and the highlight on the calendar in sync with the time
 function init() {
     // If no number of time blocks has been set, default it to 9 am - 5 pm (5 pm doesn't show as that would be 5 pm - 6 pm)
-    if (! localStorage.getItem("workStart")) {
+    if (!localStorage.getItem("workStart")) {
         localStorage.setItem("workStart", 9);
     }
-    if (! localStorage.getItem("workEnd")) {
+    if (!localStorage.getItem("workEnd")) {
         localStorage.setItem("workEnd", 17);
     }
     setDate()
