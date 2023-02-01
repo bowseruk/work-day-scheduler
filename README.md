@@ -1,4 +1,4 @@
-# Bootcamp Project 7 - Work Day Scheduler
+# Bootcamp Challenge 7 - Work Day Scheduler
 
 ## Description 
 
